@@ -42,7 +42,7 @@ function Form({ onAddItems }) {
     e.preventDefault();
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-    console.log(newItem);
+
     if (!description) return;
 
     onAddItems(newItem);
@@ -74,10 +74,24 @@ function Form({ onAddItems }) {
   );
 }
 function PackingList({ items, onDeleteItem, onToggleItem }) {
+  const [sortBy, setSortBuy] = useState("input");
+
+  let sortedItem;
+  if (sortBy === "input") sortedItem = items;
+
+  if (sortBy === "discription")
+    sortedItem = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === "packed")
+    sortedItem = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
   return (
     <div className="list">
       <ul>
-        {items.map((item) => (
+        {sortedItem.map((item) => (
           <Item
             item={item}
             onDeleteItem={onDeleteItem}
@@ -86,6 +100,13 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           />
         ))}
       </ul>
+      <div className="actions">
+        <select value={sortBy} onChange={(e) => setSortBuy(e.target.value)}>
+          <option value="input">Sorted by input</option>
+          <option value="discription">Sorted by discription</option>
+          <option value="packed">Sorted by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
