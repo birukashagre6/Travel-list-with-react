@@ -18,6 +18,14 @@ export default function App() {
       )
     );
   }
+
+  function handleClearList() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all items?"
+    );
+    if (confirmed) setItems([]);
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -26,6 +34,7 @@ export default function App() {
         items={items}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
@@ -73,7 +82,7 @@ function Form({ onAddItems }) {
     </form>
   );
 }
-function PackingList({ items, onDeleteItem, onToggleItem }) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
   const [sortBy, setSortBuy] = useState("input");
 
   let sortedItem;
@@ -88,6 +97,7 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
     sortedItem = items
       .slice()
       .sort((a, b) => Number(a.packed) - Number(b.packed));
+
   return (
     <div className="list">
       <ul>
@@ -106,6 +116,7 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           <option value="discription">Sorted by discription</option>
           <option value="packed">Sorted by packed status</option>
         </select>
+        <button onClick={onClearList}>Clear list</button>
       </div>
     </div>
   );
